@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Customer Registration{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row my-3">
+  <div class="col-sm-6 offset-sm-3">
+   <h3>Customer Registration</h3>
+   <hr>
+
+   <form action="" method="post" novalidate class="shadow p-5">
+      {% comment %} Display the success or error message inside the form {% endcomment %}
+      {% if messages %}
+         {% for message in messages %}
+         {% comment %} {% if message.tags %}: This checks if the message has any tags associated with it. Tags can be used to categorize messages, for example, as 'error', 'warning', 'success', etc. {% endcomment %}
+            <p {% if message.tags %}  class='alert alert-{{message.tags}} mb-5' {% endif %}>{{message}}</p>
+         {% endfor %}
+      {% endif %}
+
+      {% csrf_token %}
+
+      {% for fm in form %}
+         <div class="form-group mb-3">
+            {{fm.label_tag}} {{fm}} <small class='text-danger'>{{fm.errors|striptags}}</small>
+         </div>
+      {% endfor %}
+      
+      <input type="submit" value='Submit' class='btn btn-primary'>
+      <br>
+      <div class="text-center text-primary fw-bold">
+         <small>Existing User? <a href="{% url "login" %}" class='text-danger'>Login Now</a></small>
+      </div>
+      {% comment %} non_field_errors in Django forms refer to errors that are not specific to any particular field in the form. {% endcomment %}
+      {% if form.non_field_errors %}
+         {% for error in form.non_field_errors %}
+            <p class="alert alert-danger my-3">{{error}}</p>
+         {% endfor %}
+      {% endif %}
+      {% comment %} Let's say you have a registration form where the username should be unique across all users. If someone tries to register with a username that already exists, it's not an error with any particular field but a validation error related to the form as a whole. Such an error would be added to the non_field_errors list. {% endcomment %}
+   </form>
+  </div>
+ </div>
+</div>
+{% endblock main-content %}
